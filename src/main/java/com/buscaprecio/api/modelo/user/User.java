@@ -1,4 +1,4 @@
-package com.buscaprecio.api.modelo;
+package com.buscaprecio.api.modelo.user;
 
 
 import jakarta.persistence.*;
@@ -13,11 +13,17 @@ import lombok.*;
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String nombre;
     private String email;
     private String password;
     private String rol;
 
+    public User(DatosCrearUsuario dataUser) {
+        this.nombre = dataUser.nombre();
+        this.email = dataUser.email();
+        this.password = dataUser.password();
+        this.rol = dataUser.rol();
+    }
 }
