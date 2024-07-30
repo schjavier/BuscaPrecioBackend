@@ -8,7 +8,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 public interface IUserService {
 
-    public ResponseEntity<DatosRespuestaUsuario> crearUsuario(DatosCrearUsuario dataUser, UriComponentsBuilder uriComponentsBuilder);
+    ResponseEntity<DatosRespuestaUsuario> crearUsuario(DatosCrearUsuario dataUser);
 
 
 

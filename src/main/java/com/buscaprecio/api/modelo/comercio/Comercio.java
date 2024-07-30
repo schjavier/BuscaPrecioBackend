@@ -40,5 +40,14 @@ public class Comercio {
     @JoinColumn(name = "usuario_id")
     private User encargado;
 
+    public Comercio(DatosRegistrarComercio datos){
+        this.nombre = datos.nombre();
+        this.direccion = datos.direccion();
+        this.abonado = "No Abonado";
+        this.fecha = LocalDateTime.now();
+
+
+    }
+
 
 }

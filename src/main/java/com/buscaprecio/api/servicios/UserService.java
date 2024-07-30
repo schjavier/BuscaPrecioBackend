@@ -17,8 +17,9 @@ public class UserService implements IUserService{
     private UserRepository userRepository;
 
     @Override
-    public ResponseEntity<DatosRespuestaUsuario> crearUsuario(DatosCrearUsuario dataUser,
-                                                              UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<DatosRespuestaUsuario> crearUsuario( DatosCrearUsuario dataUser ) {
+
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
 
         User user = userRepository.save(new User(dataUser));
         DatosRespuestaUsuario datosRespuestaUsuario = new DatosRespuestaUsuario(

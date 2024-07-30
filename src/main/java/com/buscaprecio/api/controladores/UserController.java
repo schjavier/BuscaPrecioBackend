@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/user")
@@ -19,10 +18,9 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/new")
-    public ResponseEntity<DatosRespuestaUsuario> registrarUsuario (@RequestBody @Valid DatosCrearUsuario datosCrearUsuario,
-                                                                   UriComponentsBuilder uriComponentsBuilder){
+    public ResponseEntity<DatosRespuestaUsuario> registrarUsuario ( @RequestBody @Valid DatosCrearUsuario datosCrearUsuario ){
 
-        return userService.crearUsuario(datosCrearUsuario, uriComponentsBuilder);
+        return userService.crearUsuario(datosCrearUsuario);
 
     }
 
