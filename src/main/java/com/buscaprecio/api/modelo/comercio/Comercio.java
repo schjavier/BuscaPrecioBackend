@@ -34,7 +34,7 @@ public class Comercio {
 
     @OneToMany
     @JoinColumn (name = "oferta_id")
-    private List<Oferta> oferta;
+    private List<Oferta> ofertas;
 
     @OneToOne
     @JoinColumn(name = "usuario_id")
