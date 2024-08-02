@@ -12,12 +12,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -106,7 +110,46 @@ public class UserServiceTests {
 
     }
 
+    @Test
+    public void debeListarUsuariosConPaginacion(){
+        User user1 = new User(new DatosCrearUsuario(
+                "Alicia",
+                "alicia@123.com",
+                "6666666",
+                "ADMIN"));
 
+        user1.setId(1L);
+
+        User user2 = new User(new DatosCrearUsuario(
+                "Javier",
+                "javier@123.com",
+                "00000000",
+                "USER"));
+
+        user2.setId(2L);
+
+        List<User> usuarios = List.of(user1, user2);
+
+        Pageable paginacion = PageRequest.of(0 , 10);
+
+        Page<User> pagina = new PageImpl<>(usuarios, paginacion, usuarios.size());
+
+        when(userRepository.findAll(paginacion)).thenReturn(pagina);
+
+        ResponseEntity<Page<DatosListadoUsuarios>> respuesta = userService.listarUsuarios(paginacion);
+
+//        Chequea el codigo de la respuesta que sea el esperado
+        assertEquals(HttpStatus.OK, respuesta.getStatusCode());
+//        chequea que el total de elementos sea el esperado
+        assertEquals(2, respuesta.getBody().getTotalElements());
+//        Cheque que el total de las paginas sea el esperado
+        assertEquals(1, respuesta.getBody().getTotalPages());
+//        chequea que el tamaño del contenido sea el esperado
+        assertEquals(2, respuesta.getBody().getContent().size());
+
+//        cheque que la llamada al repositorio se esta haciendo de forma correcta
+        verify(userRepository).findAll(paginacion);
+    }
 
 
 }
