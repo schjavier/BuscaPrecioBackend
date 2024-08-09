@@ -1,29 +1,22 @@
 package com.buscaprecio.api.userTest;
 
 
-import ch.qos.logback.core.recovery.ResilientFileOutputStream;
 import com.buscaprecio.api.modelo.user.*;
+import com.buscaprecio.api.repositorio.UserRepository;
 import com.buscaprecio.api.servicios.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -147,7 +140,7 @@ public class UserServiceTests {
 //        chequea que el tamaño del contenido sea el esperado
         assertEquals(2, respuesta.getBody().getContent().size());
 
-//        cheque que la llamada al repositorio se esta haciendo de forma correcta
+//        chequea que la llamada al repositorio se esta haciendo de forma correcta
         verify(userRepository).findAll(paginacion);
     }
 

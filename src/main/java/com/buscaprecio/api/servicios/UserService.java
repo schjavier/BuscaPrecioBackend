@@ -1,11 +1,10 @@
 package com.buscaprecio.api.servicios;
 
 import com.buscaprecio.api.modelo.user.*;
-import jakarta.transaction.Transactional;
+import com.buscaprecio.api.repositorio.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
