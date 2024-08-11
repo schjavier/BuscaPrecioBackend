@@ -1,5 +1,7 @@
 package com.buscaprecio.api.servicios;
 
+import com.buscaprecio.api.excepciones.UserExisteException;
+import com.buscaprecio.api.excepciones.UserNotFoundException;
 import com.buscaprecio.api.modelo.user.*;
 import com.buscaprecio.api.repositorio.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,12 @@ public class UserService implements IUserService{
 
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
 
+        if (userRepository.existsByEmail(dataUser.email())){
+
+            throw new UserExisteException("Existe un usuario registrado con ese Email: " + dataUser.email());
+
+        }
+
         User user = userRepository.save(new User(dataUser));
         DatosRespuestaUsuario datosRespuestaUsuario = new DatosRespuestaUsuario(
 
@@ -42,7 +50,10 @@ public class UserService implements IUserService{
 
     @Override
     public ResponseEntity<DatosRespuestaUsuario> mostrarUsuario(Long id) {
-        User user = userRepository.getReferenceById(id);
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("El Usuario No Existe!"));
+
         DatosRespuestaUsuario datosRespuesta = new DatosRespuestaUsuario(
                 user.getId(),
                 user.getNombre(),
