@@ -2,6 +2,7 @@ package com.buscaprecio.api.servicios;
 
 import com.buscaprecio.api.modelo.user.DatosCrearUsuario;
 import com.buscaprecio.api.modelo.user.DatosListadoUsuarios;
+import com.buscaprecio.api.modelo.user.DatosModificarUsuario;
 import com.buscaprecio.api.modelo.user.DatosRespuestaUsuario;
 
 import org.springframework.data.domain.Page;
@@ -15,6 +16,8 @@ public interface IUserService {
     ResponseEntity eliminarUsuario(Long id);
     ResponseEntity<DatosRespuestaUsuario> mostrarUsuario(Long id);
     ResponseEntity<Page<DatosListadoUsuarios>> listarUsuarios(Pageable paginacion);
+
+    ResponseEntity modificarUsuario(DatosModificarUsuario dataUser);
 
 
 

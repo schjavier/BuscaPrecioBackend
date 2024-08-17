@@ -44,6 +44,13 @@ public class UserService implements IUserService{
 
     @Override
     public ResponseEntity eliminarUsuario(Long id) {
+
+        if(!userRepository.existsById(id)){
+
+            throw new UserNotFoundException("El usuario con el id: " + id + " no existe.");
+
+        }
+
         userRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
@@ -66,5 +73,25 @@ public class UserService implements IUserService{
     @Override
     public ResponseEntity<Page<DatosListadoUsuarios>> listarUsuarios(Pageable paginacion) {
         return ResponseEntity.ok(userRepository.findAll(paginacion).map(DatosListadoUsuarios::new));
+    }
+
+    @Override
+    public ResponseEntity modificarUsuario(DatosModificarUsuario dataUser) {
+
+        if(!userRepository.existsById(dataUser.id())){
+
+            throw new UserNotFoundException("No existe el usuario con ese ID");
+
+        }
+
+        User usuario = userRepository.getReferenceById(dataUser.id());
+
+        usuario.actualizarDatos(dataUser);
+
+        return ResponseEntity.ok(new DatosRespuestaUsuario(
+                dataUser.id(),
+                dataUser.nombre(),
+                dataUser.email(),
+                dataUser.rol()));
     }
 }

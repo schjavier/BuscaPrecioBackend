@@ -1,6 +1,7 @@
 package com.buscaprecio.api.controladores;
 import com.buscaprecio.api.modelo.user.DatosCrearUsuario;
 import com.buscaprecio.api.modelo.user.DatosListadoUsuarios;
+import com.buscaprecio.api.modelo.user.DatosModificarUsuario;
 import com.buscaprecio.api.modelo.user.DatosRespuestaUsuario;
 import com.buscaprecio.api.servicios.UserService;
 import jakarta.transaction.Transactional;
@@ -40,6 +41,10 @@ public class UserController {
         return userService.listarUsuarios(paginacion);
     }
 
-//falta modificar
+    @PutMapping
+    @Transactional
+    public ResponseEntity modificarUsuario (@RequestBody @Valid DatosModificarUsuario datosModificarUsuario){
+        return userService.modificarUsuario(datosModificarUsuario);
+    }
 }
 

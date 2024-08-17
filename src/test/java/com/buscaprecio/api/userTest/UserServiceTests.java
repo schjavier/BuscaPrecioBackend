@@ -1,6 +1,8 @@
 package com.buscaprecio.api.userTest;
 
 
+import com.buscaprecio.api.excepciones.UserExisteException;
+import com.buscaprecio.api.excepciones.UserNotFoundException;
 import com.buscaprecio.api.modelo.user.*;
 import com.buscaprecio.api.repositorio.UserRepository;
 import com.buscaprecio.api.servicios.UserService;
@@ -17,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -56,6 +59,22 @@ public class UserServiceTests {
     }
 
     @Test
+    public void debeLanzarExceptionSiUserExiste(){
+        DatosCrearUsuario datosDeEntrada = new DatosCrearUsuario(
+                "javier",
+                "javier@123.com",
+                "12345567",
+                "ADMIN");
+
+        User userExistente = new User(datosDeEntrada);
+        userExistente.setId(1L);
+
+        when(userRepository.existsByEmail(datosDeEntrada.email())).thenReturn(true);
+
+        assertThrows(UserExisteException.class, () -> userService.crearUsuario(datosDeEntrada));
+    }
+
+    @Test
     public void debeEliminarUsuarioCuandoIdValido(){
         DatosCrearUsuario datosDeEntrada = new DatosCrearUsuario(
                 "javier",
@@ -66,6 +85,7 @@ public class UserServiceTests {
         User user = new User(datosDeEntrada);
         user.setId(1L);
 
+        when(userRepository.existsById(1L)).thenReturn(true);
 
         ResponseEntity respuesta = userService.eliminarUsuario(user.getId());
 
@@ -91,15 +111,37 @@ public class UserServiceTests {
                 "javier@123.com",
                 "ADMIN"
         );
-        when(userRepository.getReferenceById(user.getId())).thenReturn(user);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         ResponseEntity<DatosRespuestaUsuario> respuesta = userService.mostrarUsuario(1L);
 
         assertNotNull(respuesta);
         assertEquals(HttpStatus.OK, respuesta.getStatusCode());
         assertEquals(respuestaEsperada, respuesta.getBody());
-        verify(userRepository).getReferenceById(user.getId());
+        verify(userRepository).findById(user.getId());
 
+
+    }
+
+    //Metodo mostrar un solo usuario del UserService
+    @Test
+    public void debeLanzarExceptionCuandoIdNoValido(){
+
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class,
+                () -> userService.mostrarUsuario(1L));
+
+    }
+
+    //Metodo eliminar usuario
+    @Test
+    public void debeLanzarExcepcionAlBorrarSiUserNoExiste(){
+
+        when(userRepository.existsById(1L)).thenReturn(false);
+
+        assertThrows(UserNotFoundException.class,
+                () -> userService.eliminarUsuario(1L));
 
     }
 
@@ -144,5 +186,33 @@ public class UserServiceTests {
         verify(userRepository).findAll(paginacion);
     }
 
+    public void debeModificarUsuarioSiIdValido(){
+        DatosModificarUsuario datosModificarUsuario = new DatosModificarUsuario(
+                1L,
+                "Pedro",
+                "pedro@123.com",
+                "1234567",
+                "ADMIN"
+        );
+
+        when(userRepository.existsById(datosModificarUsuario.id())).thenReturn(true);
+
+        User usuarioSinModificar = new User(
+                1L,
+                "pedro",
+                "peter@123.com",
+                "1234567",
+                "ADMIN");
+
+        when(userRepository.getReferenceById(datosModificarUsuario.id())).thenReturn(usuarioSinModificar);
+
+        //falta terminar el test
+
+    }
+
+    public void debeArrojarExcepcionAlModificarSiUserNoExiste(){
+
+
+    }
 
 }

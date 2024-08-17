@@ -27,4 +27,13 @@ public class User {
         this.password = dataUser.password();
         this.rol = dataUser.rol();
     }
+
+    public void actualizarDatos(DatosModificarUsuario dataUser) {
+        this.id = dataUser.id();
+        this.nombre = dataUser.nombre();
+        this.email = dataUser.email();
+        this.password = dataUser.password();
+        this.rol = dataUser.rol();
+
+    }
 }
