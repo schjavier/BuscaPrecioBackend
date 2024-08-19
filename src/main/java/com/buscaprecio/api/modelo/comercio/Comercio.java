@@ -4,10 +4,7 @@ import com.buscaprecio.api.modelo.direccion.Direccion;
 import com.buscaprecio.api.modelo.oferta.Oferta;
 import com.buscaprecio.api.modelo.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +12,7 @@ import java.util.List;
 @Entity(name = "Comercio")
 @Table(name = "comercio")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -36,7 +34,7 @@ public class Comercio {
     @JoinColumn (name = "oferta_id")
     private List<Oferta> ofertas;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "usuario_id")
     private User encargado;
 
@@ -45,6 +43,7 @@ public class Comercio {
         this.direccion = datos.direccion();
         this.abonado = "No Abonado";
         this.fecha = LocalDateTime.now();
+        this.encargado = datos.encargado();
 
 
     }

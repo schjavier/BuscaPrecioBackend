@@ -1,11 +1,15 @@
 package com.buscaprecio.api.modelo.user;
 
 
+import com.buscaprecio.api.modelo.comercio.Comercio;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity(name = "User")
-@Table(name = "user")
+@Table(name = "usuario")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,6 +24,9 @@ public class User {
     private String email;
     private String password;
     private String rol;
+
+    @OneToMany(mappedBy = "encargado", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comercio> comercios = new ArrayList<>();
 
     public User(DatosCrearUsuario dataUser) {
         this.nombre = dataUser.nombre();
@@ -36,4 +43,15 @@ public class User {
         this.rol = dataUser.rol();
 
     }
+
+    public void addComercio(Comercio comercio){
+        this.comercios.add(comercio);
+        comercio.setEncargado(this);
+    }
+
+    public void removeComercios(Comercio comercio){
+        this.comercios.remove(comercio);
+        comercio.setEncargado(null);
+    }
+
 }

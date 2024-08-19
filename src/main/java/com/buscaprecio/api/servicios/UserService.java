@@ -88,6 +88,8 @@ public class UserService implements IUserService{
 
         usuario.actualizarDatos(dataUser);
 
+        userRepository.save(usuario);
+
         return ResponseEntity.ok(new DatosRespuestaUsuario(
                 dataUser.id(),
                 dataUser.nombre(),

@@ -3,9 +3,11 @@ package com.buscaprecio.api.userTest;
 
 import com.buscaprecio.api.excepciones.UserExisteException;
 import com.buscaprecio.api.excepciones.UserNotFoundException;
+import com.buscaprecio.api.modelo.comercio.Comercio;
 import com.buscaprecio.api.modelo.user.*;
 import com.buscaprecio.api.repositorio.UserRepository;
 import com.buscaprecio.api.servicios.UserService;
+import org.apache.http.protocol.ResponseServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +62,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void debeLanzarExceptionSiUserExiste(){
+    public void debeLanzarUserExisteExceptionSiUserExiste(){
         DatosCrearUsuario datosDeEntrada = new DatosCrearUsuario(
                 "javier",
                 "javier@123.com",
@@ -125,7 +128,7 @@ public class UserServiceTests {
 
     //Metodo mostrar un solo usuario del UserService
     @Test
-    public void debeLanzarExceptionCuandoIdNoValido(){
+    public void debeLanzarUserNotFoundExceptionCuandoIdNoValido(){
 
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -136,7 +139,7 @@ public class UserServiceTests {
 
     //Metodo eliminar usuario
     @Test
-    public void debeLanzarExcepcionAlBorrarSiUserNoExiste(){
+    public void debeLanzarUserNotFoundExceptionAlBorrarSiUserNoExiste(){
 
         when(userRepository.existsById(1L)).thenReturn(false);
 
@@ -186,6 +189,7 @@ public class UserServiceTests {
         verify(userRepository).findAll(paginacion);
     }
 
+    @Test
     public void debeModificarUsuarioSiIdValido(){
         DatosModificarUsuario datosModificarUsuario = new DatosModificarUsuario(
                 1L,
@@ -202,16 +206,50 @@ public class UserServiceTests {
                 "pedro",
                 "peter@123.com",
                 "1234567",
-                "ADMIN");
+                "ADMIN",
+                new ArrayList<>());
 
         when(userRepository.getReferenceById(datosModificarUsuario.id())).thenReturn(usuarioSinModificar);
 
-        //falta terminar el test
+        when(userRepository.save(usuarioSinModificar)).thenReturn(usuarioSinModificar);
 
+        DatosRespuestaUsuario respuestaEsperada = new DatosRespuestaUsuario(
+                1L,
+                "Pedro",
+                "pedro@123.com",
+                "ADMIN"
+        );
+
+        ResponseEntity respuesta = userService.modificarUsuario(datosModificarUsuario);
+
+        assertNotNull(respuesta);
+        assertEquals(HttpStatus.OK, respuesta.getStatusCode());
+        assertEquals(respuestaEsperada, respuesta.getBody());
+
+        verify(userRepository).existsById(datosModificarUsuario.id());
+        verify(userRepository).getReferenceById(datosModificarUsuario.id());
+        verify(userRepository).save(usuarioSinModificar);
     }
 
-    public void debeArrojarExcepcionAlModificarSiUserNoExiste(){
+    @Test
+    public void debeArrojarUserNotFoundExceptionAlModificarSiUserNoExiste(){
 
+        DatosModificarUsuario datosModificarUsuario = new DatosModificarUsuario(
+                1L,
+                "Pedro",
+                "pedro@123.com",
+                "1234567",
+                "ADMIN"
+        );
+
+        when(userRepository.existsById(datosModificarUsuario.id())).thenReturn(false);
+
+        assertThrows(UserNotFoundException.class,
+                () -> userService.modificarUsuario(datosModificarUsuario) );
+
+        // verifica que no hay ninguna llamada al repositorio, despues de devolcer la exception.
+        verify(userRepository, never()).getReferenceById(datosModificarUsuario.id());
+        verify(userRepository, never()).save(any());
 
     }
 
