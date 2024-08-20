@@ -1,16 +1,14 @@
 package com.buscaprecio.api.modelo.direccion;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity (name= "Direcion")
 @Table (name = "direccion")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @EqualsAndHashCode(of = "id")
 public class Direccion {
 
@@ -21,4 +19,9 @@ public class Direccion {
     private String barrio;
     private String provincia;
 
+    public Direccion(DatosDireccion datosDireccion) {
+        this.calle = datosDireccion.calle();
+        this.barrio = datosDireccion.barrio();
+        this.provincia = datosDireccion.provincia();
+    }
 }
