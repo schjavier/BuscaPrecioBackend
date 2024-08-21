@@ -1,7 +1,7 @@
 package com.buscaprecio.api.servicios;
 
-import com.buscaprecio.api.excepciones.UserExisteException;
-import com.buscaprecio.api.excepciones.UserNotFoundException;
+import com.buscaprecio.api.excepciones.user.UserExisteException;
+import com.buscaprecio.api.excepciones.user.UserNotFoundException;
 import com.buscaprecio.api.modelo.user.*;
 import com.buscaprecio.api.repositorio.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

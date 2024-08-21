@@ -1,4 +1,4 @@
-package com.buscaprecio.api.excepciones;
+package com.buscaprecio.api.excepciones.user;
 
 public class UserExisteException extends RuntimeException{
 

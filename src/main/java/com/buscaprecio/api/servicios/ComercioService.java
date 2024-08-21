@@ -1,7 +1,8 @@
 package com.buscaprecio.api.servicios;
 
-import com.buscaprecio.api.excepciones.ComercioNotFoundException;
-import com.buscaprecio.api.excepciones.UserNotFoundException;
+import com.buscaprecio.api.excepciones.comercio.ComercioExisteException;
+import com.buscaprecio.api.excepciones.comercio.ComercioNotFoundException;
+import com.buscaprecio.api.excepciones.user.UserNotFoundException;
 import com.buscaprecio.api.modelo.comercio.Comercio;
 import com.buscaprecio.api.modelo.comercio.DatosListadoComercios;
 import com.buscaprecio.api.modelo.comercio.DatosRegistrarComercio;
@@ -30,9 +31,16 @@ public class ComercioService implements IComercioService{
     public ResponseEntity<DatosRespuestaComercio> crearComercio(DatosRegistrarComercio dataComercio) {
 
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-        //exeptions aqui
+
+        if (comercioRepository.existsByNombre( dataComercio.nombre() ) &&
+                comercioRepository.existsByEncargado( dataComercio.encargado() )){
+
+            throw new ComercioExisteException("El Comercio ya se encuentra Registrado");
+
+        }
 
         Comercio comercio = comercioRepository.save(new Comercio(dataComercio));
+
         DatosDireccion datosDireccion = new DatosDireccion(
                 dataComercio.direccion().getCalle(),
                 dataComercio.direccion().getBarrio(),

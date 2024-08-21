@@ -1,13 +1,11 @@
 package com.buscaprecio.api.userTest;
 
 
-import com.buscaprecio.api.excepciones.UserExisteException;
-import com.buscaprecio.api.excepciones.UserNotFoundException;
-import com.buscaprecio.api.modelo.comercio.Comercio;
+import com.buscaprecio.api.excepciones.user.UserExisteException;
+import com.buscaprecio.api.excepciones.user.UserNotFoundException;
 import com.buscaprecio.api.modelo.user.*;
 import com.buscaprecio.api.repositorio.UserRepository;
 import com.buscaprecio.api.servicios.UserService;
-import org.apache.http.protocol.ResponseServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
