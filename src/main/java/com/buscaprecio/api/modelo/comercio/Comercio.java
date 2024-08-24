@@ -23,12 +23,13 @@ public class Comercio {
 
     private String nombre;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "direccion_id")
     private Direccion direccion;
 
     private String abonado;
-    private LocalDateTime fecha;
+    @Column(name = "fecha_abono")
+    private LocalDateTime fechaAbono;
 
     @OneToMany
     @JoinColumn (name = "oferta_id")
@@ -42,7 +43,7 @@ public class Comercio {
         this.nombre = datos.nombre();
         this.direccion = datos.direccion();
         this.abonado = "No Abonado";
-        this.fecha = LocalDateTime.now();
+        this.fechaAbono = LocalDateTime.now();
         this.encargado = datos.encargado();
 
 

@@ -11,54 +11,52 @@ import com.buscaprecio.api.modelo.direccion.DatosDireccion;
 import com.buscaprecio.api.modelo.direccion.Direccion;
 import com.buscaprecio.api.repositorio.ComercioRepository;
 import com.buscaprecio.api.repositorio.DireccionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
+@Service
 public class ComercioService implements IComercioService{
 
     @Autowired
     private ComercioRepository comercioRepository;
 
-    @Autowired
-    private DireccionRepository direccionRepository;
 
+    @Transactional
     @Override
-    public ResponseEntity<DatosRespuestaComercio> crearComercio(DatosRegistrarComercio dataComercio) {
+    public DatosRespuestaComercio crearComercio(DatosRegistrarComercio dataComercio) {
 
-        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-
-        if (comercioRepository.existsByNombre( dataComercio.nombre() ) &&
-                comercioRepository.existsByEncargado( dataComercio.encargado() )){
+         if (comercioRepository.existsByNombreAndEncargado( dataComercio.nombre(), dataComercio.encargado() )){
 
             throw new ComercioExisteException("El Comercio ya se encuentra Registrado");
 
         }
 
-        Comercio comercio = comercioRepository.save(new Comercio(dataComercio));
+        Comercio comercio = new Comercio(dataComercio);
 
-        DatosDireccion datosDireccion = new DatosDireccion(
-                dataComercio.direccion().getCalle(),
-                dataComercio.direccion().getBarrio(),
-                dataComercio.direccion().getProvincia());
+        Direccion direccion = new Direccion(
+                    dataComercio.direccion().getCalle(),
+                    dataComercio.direccion().getBarrio(),
+                    dataComercio.direccion().getProvincia()
+                );
 
-        direccionRepository.save(new Direccion(datosDireccion));
+        comercio.setDireccion(direccion);
+        comercio = comercioRepository.save(comercio);
 
-        DatosRespuestaComercio datosRespuestaComercio = new DatosRespuestaComercio(
+        return new DatosRespuestaComercio(
                 comercio.getId(),
                 comercio.getNombre(),
-                datosDireccion,
-                comercio.getFecha(),
+                new DatosDireccion(direccion.getCalle(), direccion.getBarrio(), direccion.getProvincia()),
+                comercio.getFechaAbono(),
                 comercio.getEncargado()
         );
 
-        URI url = uriComponentsBuilder.path("comercio/{id}").buildAndExpand(comercio.getId()).toUri();
-
-        return ResponseEntity.created(url).body(datosRespuestaComercio);
     }
 
     @Override
@@ -66,7 +64,7 @@ public class ComercioService implements IComercioService{
 
         if(!comercioRepository.existsById(id)){
 
-            throw new UserNotFoundException("El comercio con el id: " + id + " no existe");
+            throw new ComercioNotFoundException("El comercio con el id: " + id + " no existe");
 
         }
 
@@ -88,7 +86,7 @@ public class ComercioService implements IComercioService{
                         comercio.getDireccion().getCalle(),
                         comercio.getDireccion().getBarrio(),
                         comercio.getDireccion().getProvincia()),
-                comercio.getFecha(),
+                comercio.getFechaAbono(),
                 comercio.getEncargado()
         );
 

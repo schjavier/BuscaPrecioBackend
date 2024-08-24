@@ -24,4 +24,11 @@ public class Direccion {
         this.barrio = datosDireccion.barrio();
         this.provincia = datosDireccion.provincia();
     }
+
+    public Direccion(String calle, String barrio, String provincia) {
+        this.calle = calle;
+        this.barrio = barrio;
+        this.provincia = provincia;
+
+    }
 }

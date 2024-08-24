@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ComercioRepository extends JpaRepository<Comercio, Long> {
 
-    boolean existsByNombre(String nombre);
+    boolean existsByNombreAndEncargado(String nombre, User encargado);
 
-    boolean existsByEncargado(User encargado);
+
 }
