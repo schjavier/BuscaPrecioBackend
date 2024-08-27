@@ -13,6 +13,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 
 import java.net.URI;
+
+//Desacoplar el service, y el responseEntity pasarlo al Controller
+
 @Service
 public class UserService implements IUserService{
 

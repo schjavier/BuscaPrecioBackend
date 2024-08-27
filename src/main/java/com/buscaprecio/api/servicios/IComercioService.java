@@ -10,9 +10,9 @@ import org.springframework.http.ResponseEntity;
 public interface IComercioService {
 
     DatosRespuestaComercio crearComercio(DatosRegistrarComercio dataComercio);
-    ResponseEntity eliminarComercio(Long id);
-    ResponseEntity<DatosRespuestaComercio> mostrarComercio(Long id);
-    ResponseEntity<Page<DatosListadoComercios>> listarComercios(Pageable paginacion);
+    void eliminarComercio(Long id);
+    DatosRespuestaComercio mostrarComercio(Long id);
+    Page<DatosListadoComercios> listarComercios(Pageable paginacion);
 
 
 }

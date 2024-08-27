@@ -60,7 +60,7 @@ public class ComercioService implements IComercioService{
     }
 
     @Override
-    public ResponseEntity eliminarComercio(Long id) {
+    public void eliminarComercio(Long id) {
 
         if(!comercioRepository.existsById(id)){
 
@@ -69,17 +69,16 @@ public class ComercioService implements IComercioService{
         }
 
         comercioRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<DatosRespuestaComercio> mostrarComercio(Long id) {
+    public DatosRespuestaComercio mostrarComercio(Long id) {
 
         Comercio comercio = comercioRepository.findById(id)
                 .orElseThrow( () -> new ComercioNotFoundException("El Comercio no existe!") );
 
 
-        DatosRespuestaComercio datosRespuesta = new DatosRespuestaComercio(
+        return new DatosRespuestaComercio(
                 comercio.getId(),
                 comercio.getNombre(),
                 new DatosDireccion(
@@ -89,12 +88,10 @@ public class ComercioService implements IComercioService{
                 comercio.getFechaAbono(),
                 comercio.getEncargado()
         );
-
-        return ResponseEntity.ok(datosRespuesta);
     }
 
     @Override
-    public ResponseEntity<Page<DatosListadoComercios>> listarComercios(Pageable paginacion) {
-        return ResponseEntity.ok(comercioRepository.findAll(paginacion).map(DatosListadoComercios::new));
+    public Page<DatosListadoComercios> listarComercios(Pageable paginacion) {
+        return comercioRepository.findAll(paginacion).map(DatosListadoComercios::new);
     }
 }
