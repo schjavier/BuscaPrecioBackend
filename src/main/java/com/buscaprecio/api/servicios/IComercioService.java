@@ -5,7 +5,7 @@ import com.buscaprecio.api.modelo.comercio.DatosRegistrarComercio;
 import com.buscaprecio.api.modelo.comercio.DatosRespuestaComercio;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
+
 
 public interface IComercioService {
 

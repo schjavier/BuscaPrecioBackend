@@ -1,7 +1,11 @@
 package com.buscaprecio.api.comercioTest;
 
+import com.buscaprecio.api.modelo.comercio.DatosRegistrarComercio;
+import com.buscaprecio.api.modelo.direccion.Direccion;
+import com.buscaprecio.api.modelo.user.User;
 import com.buscaprecio.api.repositorio.ComercioRepository;
 import com.buscaprecio.api.servicios.ComercioService;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,6 +20,6 @@ public class ComercioServiceTest {
     @InjectMocks
     private ComercioService comercioService;
 
-    
+
 
 }
